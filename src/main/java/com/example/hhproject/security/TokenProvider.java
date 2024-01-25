@@ -5,6 +5,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -13,7 +14,8 @@ import java.util.Date;
 @Slf4j
 @Service
 public class TokenProvider {
-    private static final String SECRET_KEY = "sjfiwaejTUBc38dksdjsfjdijkskwiWi4kjfiKKfjwiWWWijdlKDJFI28alieji23jiljsihdsfjseiljDJIEHA22ngj99eshfukajwi22jfi321";
+    @Value("${jwt.secret}")
+    private String SECRET_KEY;
 
     public String create(User user) {
         Date expiryDate = Date.from(

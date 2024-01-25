@@ -16,6 +16,7 @@ public class UserDTO {
     private String username;
     private String password;
     private String id;
+    private String content;
     private boolean status;
 
     public static User toEntity(final UserDTO dto) {
@@ -23,6 +24,7 @@ public class UserDTO {
                 .mail(dto.getMail())
                 .username(dto.getUsername())
                 .password(dto.getPassword())
+                .content(dto.getContent())
                 .build();
     }
 }
