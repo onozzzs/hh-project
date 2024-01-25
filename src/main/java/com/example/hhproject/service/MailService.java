@@ -1,5 +1,6 @@
 package com.example.hhproject.service;
 
+import com.example.hhproject.util.RedisUtil;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,13 @@ import java.util.Random;
 public class MailService {
     @Autowired
     private JavaMailSender mailSender;
+    @Autowired
+    private RedisUtil redisUtil;
     private int authNumber;
+
+    public Boolean checkMail(String mail, String auth) {
+        return redisUtil.getData(auth).equals(mail);
+    }
 
     public String makeAndSendMail(String mail) {
         if (mail == null) {
@@ -43,6 +50,7 @@ public class MailService {
             log.error("sendMail", e);
             e.printStackTrace();
         }
+        redisUtil.setDataExpire(Integer.toString(authNumber), to, 60 * 5L);
     }
 
     private void makeRandomNumber() {
