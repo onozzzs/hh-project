@@ -24,7 +24,7 @@ public class User {
     private String content;
 
     @Nullable
-    private String profile_img;
+    private String profileUrl;
 
     @Nullable
     private boolean status;

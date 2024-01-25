@@ -25,6 +25,12 @@ public class UserService {
         return userRepository.save(originalUser);
     }
 
+    public User updateFile(final String userId, final String fileUrl) {
+        User originalUser = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("user not found"));
+        originalUser.setProfileUrl(fileUrl);
+        return userRepository.save(originalUser);
+    }
+
     public Boolean validatePassword(final String userId, final String oldPassword, final PasswordEncoder passwordEncoder) {
         final User originalUser = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("user not found"));
         log.info("----------" + originalUser.getUsername());
@@ -44,7 +50,7 @@ public class UserService {
                 .status(originalUser.isStatus())
                 .content(originalUser.getContent())
                 .mail(originalUser.getMail())
-                .profile_img(originalUser.getProfile_img())
+                .profileUrl(originalUser.getProfileUrl())
                 .build();
         return userRepository.save(originalUser);
     }

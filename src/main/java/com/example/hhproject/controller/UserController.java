@@ -5,6 +5,7 @@ import com.example.hhproject.dto.UserDTO;
 import com.example.hhproject.model.User;
 import com.example.hhproject.security.TokenProvider;
 import com.example.hhproject.service.MailService;
+import com.example.hhproject.service.S3UploadService;
 import com.example.hhproject.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 
 @RestController
@@ -21,10 +25,14 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final MailService mailService;
     @Autowired
+    private S3UploadService uploadService;
+    @Autowired
     private UserService userService;
     @Autowired
     private TokenProvider tokenProvider;
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+
 
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@RequestBody UserDTO userDTO) {
@@ -93,6 +101,13 @@ public class UserController {
         } else {
             return ResponseEntity.ok().body("wrong code");
         }
+    }
+
+    @PostMapping("/setting/updateFile")
+    public ResponseEntity<?> updateFile(@AuthenticationPrincipal String userId, @RequestParam("file") MultipartFile file) throws IOException {
+        String fileUrl = uploadService.saveFile(file);
+        User user = userService.updateFile(userId, fileUrl);
+        return ResponseEntity.ok().body(user);
     }
 
     @PostMapping("/setting/updatePassword")
