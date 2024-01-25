@@ -15,9 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.io.IOException;
-
 
 @RestController
 @RequestMapping
@@ -31,8 +29,6 @@ public class UserController {
     @Autowired
     private TokenProvider tokenProvider;
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-
 
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@RequestBody UserDTO userDTO) {
