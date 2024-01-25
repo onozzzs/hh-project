@@ -5,12 +5,14 @@ import com.example.hhproject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+
+    public User getByCredentials(final String mail, final String password) {
+        return userRepository.findByMailAndPassword(mail, password);
+    }
 
     public User registerUser(final User user) {
         final String username = user.getUsername();

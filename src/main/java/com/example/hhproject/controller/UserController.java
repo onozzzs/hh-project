@@ -16,6 +16,25 @@ public class UserController {
     private final UserService userService;
     private final MailService mailService;
 
+    @PostMapping("/signin")
+    public ResponseEntity<?> signin(@RequestBody UserDTO userDTO) {
+        User user = userService.getByCredentials(
+                userDTO.getMail(),
+                userDTO.getPassword()
+        );
+
+        if (user != null) {
+            UserDTO responseUserDTO = UserDTO.builder()
+                    .mail(user.getMail())
+                    .password(user.getPassword())
+                    .id(user.getId())
+                    .build();
+            return ResponseEntity.ok().body(responseUserDTO);
+        } else {
+            return ResponseEntity.badRequest().body("Login Failed");
+        }
+    }
+
     @PostMapping("/signup")
     public ResponseEntity<?> signup(@RequestBody UserDTO userDTO) {
         try {
