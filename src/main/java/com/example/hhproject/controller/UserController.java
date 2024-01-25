@@ -1,14 +1,21 @@
 package com.example.hhproject.controller;
 
+import com.example.hhproject.dto.PasswordDTO;
 import com.example.hhproject.dto.UserDTO;
 import com.example.hhproject.model.User;
 import com.example.hhproject.security.TokenProvider;
 import com.example.hhproject.service.MailService;
 import com.example.hhproject.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
 @RequestMapping
@@ -19,12 +26,34 @@ public class UserController {
     private UserService userService;
     @Autowired
     private TokenProvider tokenProvider;
+    private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+    @PostMapping("/updatePassword")
+    public ResponseEntity<?> updatePassword(@AuthenticationPrincipal String userId, @RequestBody PasswordDTO passwordDTO) {
+        if (passwordDTO == null) {
+            throw new RuntimeException("Empty password");
+        }
+        // 1. userId 로 찾은 비밀 번호와 passwordDTO.getOldPassword() 일치하는지 확인
+        Boolean isValid = userService.validatePassword(userId, passwordDTO.getOldPassword(), passwordEncoder);
+        // 2. 일치한다면 비밀번호 업데이트
+        if (isValid) {
+            User updatedUser = userService.updatePassword(userId, passwordDTO.getNewPassword(), passwordEncoder);
+            UserDTO responseUserDTO = UserDTO.builder()
+                    .mail(updatedUser.getMail())
+                    .password(updatedUser.getPassword())
+                    .id(updatedUser.getId())
+                    .build();
+            return ResponseEntity.ok().body(responseUserDTO);
+        }
+        return ResponseEntity.badRequest().body("Failed to update password");
+    }
 
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@RequestBody UserDTO userDTO) {
         User user = userService.getByCredentials(
                 userDTO.getMail(),
-                userDTO.getPassword()
+                userDTO.getPassword(),
+                passwordEncoder
         );
 
         if (user != null) {
@@ -48,8 +77,12 @@ public class UserController {
                 throw new RuntimeException("Invalid user value");
             }
 
-            User user = UserDTO.toEntity(userDTO);
-            user.setStatus(false);
+            User user = User.builder()
+                    .mail(userDTO.getMail())
+                    .username(userDTO.getUsername())
+                    .password(passwordEncoder.encode(userDTO.getPassword()))
+                    .status(false)
+                    .build();
 
             User registeredUser = userService.registerUser(user);
             UserDTO responseUserDTO = UserDTO.builder()

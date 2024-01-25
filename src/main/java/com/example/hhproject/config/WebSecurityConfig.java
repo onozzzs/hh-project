@@ -27,7 +27,7 @@ public class WebSecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> {
-                    authorize.requestMatchers("/", "/signin", "/signup", "/signup/sendMail", "/signup/verifyMail")
+                            authorize.requestMatchers("/", "/signin", "/signup", "/signup/sendMail", "/signup/verifyMail")
                                     .permitAll()
                                     .anyRequest()
                                     .authenticated();
