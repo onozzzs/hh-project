@@ -2,10 +2,11 @@ package com.example.hhproject.controller;
 
 import com.example.hhproject.dto.UserDTO;
 import com.example.hhproject.model.User;
+import com.example.hhproject.security.TokenProvider;
 import com.example.hhproject.service.MailService;
 import com.example.hhproject.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.apache.catalina.UserDatabase;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,8 +14,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
     private final MailService mailService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private TokenProvider tokenProvider;
 
     @PostMapping("/signin")
     public ResponseEntity<?> signin(@RequestBody UserDTO userDTO) {
@@ -24,10 +28,12 @@ public class UserController {
         );
 
         if (user != null) {
+            final String token = tokenProvider.create(user);
             UserDTO responseUserDTO = UserDTO.builder()
                     .mail(user.getMail())
                     .password(user.getPassword())
                     .id(user.getId())
+                    .token(token)
                     .build();
             return ResponseEntity.ok().body(responseUserDTO);
         } else {
