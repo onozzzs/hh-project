@@ -24,7 +24,7 @@ public class UserDTO {
                 .mail(dto.getMail())
                 .username(dto.getUsername())
                 .password(dto.getPassword())
-                .content(dto.getContent())
+                .status(dto.isStatus())
                 .build();
     }
 }

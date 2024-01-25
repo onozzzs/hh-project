@@ -30,8 +30,8 @@ public class UserController {
     private TokenProvider tokenProvider;
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @PostMapping("/signin")
-    public ResponseEntity<?> signin(@RequestBody UserDTO userDTO) {
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
         User user = userService.getByCredentials(
                 userDTO.getMail(),
                 userDTO.getPassword(),
@@ -59,12 +59,7 @@ public class UserController {
                 throw new RuntimeException("Invalid user value");
             }
 
-            User user = User.builder()
-                    .mail(userDTO.getMail())
-                    .username(userDTO.getUsername())
-                    .password(passwordEncoder.encode(userDTO.getPassword()))
-                    .status(false)
-                    .build();
+            User user = UserDTO.toEntity(userDTO);
 
             User registeredUser = userService.registerUser(user);
             UserDTO responseUserDTO = UserDTO.builder()
@@ -117,7 +112,6 @@ public class UserController {
             UserDTO responseUserDTO = UserDTO.builder()
                     .mail(updatedUser.getMail())
                     .password(updatedUser.getPassword())
-                    .id(updatedUser.getId())
                     .build();
             return ResponseEntity.ok().body(responseUserDTO);
         }
@@ -132,7 +126,6 @@ public class UserController {
                 .username(updatedUser.getUsername())
                 .mail(updatedUser.getMail())
                 .password(updatedUser.getPassword())
-                .id(updatedUser.getId())
                 .content(updatedUser.getContent())
                 .build();
 

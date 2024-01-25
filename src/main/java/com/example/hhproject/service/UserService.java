@@ -1,6 +1,5 @@
 package com.example.hhproject.service;
 
-import com.example.hhproject.dto.UserDTO;
 import com.example.hhproject.model.User;
 import com.example.hhproject.repository.UserRepository;
 import com.example.hhproject.security.TokenProvider;
@@ -33,11 +32,8 @@ public class UserService {
 
     public Boolean validatePassword(final String userId, final String oldPassword, final PasswordEncoder passwordEncoder) {
         final User originalUser = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("user not found"));
-        log.info("----------" + originalUser.getUsername());
         User updatedUser = getByCredentials(originalUser.getMail(), oldPassword, passwordEncoder);
-        if (updatedUser == null) {
-            return false;
-        }
+        if (updatedUser == null) return false;
         return true;
     }
 
