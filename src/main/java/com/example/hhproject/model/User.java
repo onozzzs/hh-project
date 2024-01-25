@@ -2,21 +2,21 @@ package com.example.hhproject.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.lang.Nullable;
 
 @Builder
-@NoArgsConstructor
 @Getter
+@Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @UuidGenerator
     private String id;
-    private String email;
+    private String mail;
     private String password;
     private String username;
 
@@ -27,5 +27,5 @@ public class User {
     private String profile_img;
 
     @Nullable
-    private boolean is_valid;
+    private boolean status;
 }
