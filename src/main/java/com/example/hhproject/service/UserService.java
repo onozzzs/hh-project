@@ -53,7 +53,6 @@ public class UserService {
 
     public User getByCredentials(final String mail, final String password, final PasswordEncoder passwordEncoder) {
         final User originalUser = userRepository.findByMail(mail);
-        log.info("-----------" + originalUser.getUsername());
         if (originalUser != null && passwordEncoder.matches(password, originalUser.getPassword())) {
             return originalUser;
         }
