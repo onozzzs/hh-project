@@ -67,7 +67,7 @@ public class FollowService {
 
     private void makeAndSaveNotification(String toUser, String fromUser) {
         NotificationType notificationType = NotificationType.FOLLOW;
-        String content = notificationType.makeMessage(fromUser);
+        String content = notificationType.makeMessage(fromUser, toUser);
         log.error("addFollowing: " + content);
 
         NotificationDTO notificationDTO = NotificationDTO.builder()
