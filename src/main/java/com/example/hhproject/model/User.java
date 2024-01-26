@@ -1,8 +1,6 @@
 package com.example.hhproject.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.lang.Nullable;
@@ -10,14 +8,14 @@ import org.springframework.lang.Nullable;
 import java.util.List;
 
 @Builder
-@Getter
-@Setter
+@Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
     @Id
     @UuidGenerator
+    @Column(name="user_id")
     private String id;
     private String mail;
     private String password;
@@ -39,4 +37,8 @@ public class User {
     @Nullable
     @OneToMany(mappedBy = "following")
     private List<Follow> followerList;
+
+    @Nullable
+    @OneToMany(mappedBy = "receiver")
+    private List<Notification> notificationList;
 }

@@ -4,19 +4,19 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Builder
-@Getter
-@Setter
+@Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer id;
+    @Column(name="follow_id")
+    private Integer id;
     @ManyToOne
-    @JoinColumn(name="following_id")
-    public User following;
+    @JoinColumn(name="following")
+    private User following;
     @ManyToOne
-    @JoinColumn(name="follower_id")
-    public User follower;
+    @JoinColumn(name="follower")
+    private User follower;
 }
