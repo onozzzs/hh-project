@@ -59,7 +59,11 @@ public class UserController {
                 throw new RuntimeException("Invalid user value");
             }
 
-            User user = UserDTO.toEntity(userDTO);
+            User user = User.builder()
+                    .mail(userDTO.getMail())
+                    .password(passwordEncoder.encode((userDTO.getPassword())))
+                    .username(userDTO.getUsername())
+                    .build();
 
             User registeredUser = userService.registerUser(user);
             UserDTO responseUserDTO = UserDTO.builder()

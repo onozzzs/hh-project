@@ -2,9 +2,12 @@ package com.example.hhproject.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.lang.Nullable;
+
+import java.util.List;
 
 @Builder
 @Getter
@@ -28,4 +31,12 @@ public class User {
 
     @Nullable
     private boolean status;
+
+    @Nullable
+    @OneToMany(mappedBy = "follower")
+    private List<Follow> followingList;
+
+    @Nullable
+    @OneToMany(mappedBy = "following")
+    private List<Follow> followerList;
 }
