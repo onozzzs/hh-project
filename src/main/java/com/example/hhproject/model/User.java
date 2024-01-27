@@ -39,6 +39,6 @@ public class User {
     private List<Follow> followerList;
 
     @Nullable
-    @OneToMany(mappedBy = "receiver")
-    private List<Notification> notificationList;
+    @OneToMany(mappedBy = "user")
+    private List<Activity> activityList;
 }

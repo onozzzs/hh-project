@@ -1,8 +1,10 @@
 package com.example.hhproject.model;
 
-import jakarta.annotation.Nullable;
+import com.example.hhproject.dto.NotificationDTO;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.time.LocalDateTime;
 
 @Builder
 @Data
@@ -13,14 +15,15 @@ public class Notification {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="notification_id")
-    private Integer id;
+    private Long id;
 
-    @ManyToOne
-    @JoinColumn(name ="receiver_id")
-    private User receiver;
+    private String receiver;
 
-    @Nullable
+    private Long activityId;
+
     private String content;
 
-    private NotificationType notificationType;
+    private LocalDateTime createdAt;
+
+    private Boolean status;
 }

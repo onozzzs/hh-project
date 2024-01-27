@@ -1,12 +1,12 @@
 package com.example.hhproject.service;
 
+import com.example.hhproject.model.Category;
 import com.example.hhproject.model.Post;
 import com.example.hhproject.model.User;
 import com.example.hhproject.repository.PostRepository;
 import com.example.hhproject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -23,10 +23,15 @@ public class PostService {
     @Autowired
     private FollowService followService;
 
+    @Autowired
+    private PostActivityServiceImpl activityService;
+
     public void savePost(final String userId, Post post) {
         User writer = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("user not found"));
         post.setWriter(writer);
         postRepository.save(post);
+
+        activityService.makeAndSaveActivity(writer, Category.POST, String.valueOf(post.getId()));
     }
 
     public List<Post> getPost(final String userId) {

@@ -1,8 +1,7 @@
 package com.example.hhproject.service;
 
-import com.example.hhproject.dto.NotificationDTO;
 import com.example.hhproject.model.Follow;
-import com.example.hhproject.model.NotificationType;
+import com.example.hhproject.model.Category;
 import com.example.hhproject.model.User;
 import com.example.hhproject.repository.FollowRepository;
 import com.example.hhproject.repository.UserRepository;
@@ -24,7 +23,7 @@ public class FollowService {
     private UserRepository userRepository;
 
     @Autowired
-    private NotificationService notificationService;
+    private FollowActivityServiceImpl activityService;
 
     public List<String> getFollowings(final String userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("user not found"));
@@ -62,21 +61,7 @@ public class FollowService {
                 .build();
 
         followRepository.save(newFollow);
-        makeAndSaveNotification(following.getId(), userId);
-    }
-
-    private void makeAndSaveNotification(String toUser, String fromUser) {
-        NotificationType notificationType = NotificationType.FOLLOW;
-        String content = notificationType.makeMessage(fromUser, toUser);
-        log.error("addFollowing: " + content);
-
-        NotificationDTO notificationDTO = NotificationDTO.builder()
-                .userId(toUser)
-                .content(content)
-                .notificationType(notificationType)
-                .build();
-
-        notificationService.addNotification(notificationDTO);
+        activityService.makeAndSaveActivity(follower, Category.FOLLOW, following.getUsername());
     }
 
     private void validate(User user) {

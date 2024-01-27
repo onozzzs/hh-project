@@ -1,8 +1,7 @@
 package com.example.hhproject.controller;
 
-import com.example.hhproject.model.Follow;
+import com.example.hhproject.service.FollowActivityServiceImpl;
 import com.example.hhproject.service.FollowService;
-import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
