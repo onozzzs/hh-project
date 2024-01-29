@@ -25,24 +25,6 @@ public class FollowService {
     @Autowired
     private FollowActivityServiceImpl activityService;
 
-    public List<String> getFollowings(final String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("user not found"));
-        List<String> followings = new ArrayList<>();
-        for (Follow follow : user.getFollowingList()) {
-            followings.add(follow.getFollowing().getUsername());
-        }
-        return followings;
-    }
-
-    public List<String> getFollowers(final String userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("user not found"));
-        List<String> followers = new ArrayList<>();
-        for (Follow follow : user.getFollowerList()) {
-            followers.add(follow.getFollower().getUsername());
-        }
-        return followers;
-    }
-
     public void addFollowing(final String userId, final String followingName) {
         User follower = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("user not found"));
         validate(follower);
@@ -62,6 +44,24 @@ public class FollowService {
 
         followRepository.save(newFollow);
         activityService.makeAndSaveActivity(follower, Category.FOLLOW, following.getUsername());
+    }
+
+    public List<String> getFollowings(final String userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("user not found"));
+        List<String> followings = new ArrayList<>();
+        for (Follow follow : user.getFollowingList()) {
+            followings.add(follow.getFollowing().getUsername());
+        }
+        return followings;
+    }
+
+    public List<String> getFollowers(final String userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("user not found"));
+        List<String> followers = new ArrayList<>();
+        for (Follow follow : user.getFollowerList()) {
+            followers.add(follow.getFollower().getUsername());
+        }
+        return followers;
     }
 
     private void validate(User user) {

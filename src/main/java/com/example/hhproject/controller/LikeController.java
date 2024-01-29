@@ -15,24 +15,24 @@ public class LikeController {
     @PostMapping("/post/{postId}")
     public ResponseEntity<?> likePost(@AuthenticationPrincipal String userId, @PathVariable Long postId) {
         likeService.likePost(userId, postId);
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body("likes on " + postId);
     }
 
     @DeleteMapping("/post/{postId}")
     public ResponseEntity<?> unlikePost(@AuthenticationPrincipal String userId, @PathVariable Long postId) {
         likeService.unlikePost(userId, postId);
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body("unlikes on " + postId);
     }
 
     @PostMapping("/comment/{commentId}")
     public ResponseEntity<?> likeComment(@AuthenticationPrincipal String userId, @PathVariable Long commentId) {
         likeService.likeComment(userId, commentId);
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body("likes on " + commentId);
     }
 
     @DeleteMapping("/comment/{commentId}")
     public ResponseEntity<?> unlikeComment(@AuthenticationPrincipal String userId, @PathVariable Long commentId) {
         likeService.unlikeComment(userId, commentId);
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body("unlikes on " + commentId);
     }
 }

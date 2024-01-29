@@ -1,6 +1,5 @@
 package com.example.hhproject.controller;
 
-import com.example.hhproject.service.FollowActivityServiceImpl;
 import com.example.hhproject.service.FollowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,14 +19,14 @@ public class FollowController {
         return ResponseEntity.ok().body(following + " 을 팔로우");
     }
 
-    @GetMapping("/following")
-    public ResponseEntity<?> getFollowingList(@AuthenticationPrincipal String userId) {
+    @GetMapping("/followings")
+    public ResponseEntity<?> getFollowings(@AuthenticationPrincipal String userId) {
         List<String> followings = followService.getFollowings(userId);
         return ResponseEntity.ok().body(followings);
     }
 
-    @GetMapping("/follower")
-    public ResponseEntity<?> getFollowerList(@AuthenticationPrincipal String userId) {
+    @GetMapping("/followers")
+    public ResponseEntity<?> getFollowers(@AuthenticationPrincipal String userId) {
         List<String> followers = followService.getFollowers(userId);
         return ResponseEntity.ok().body(followers);
     }

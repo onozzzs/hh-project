@@ -7,7 +7,6 @@ import com.example.hhproject.repository.PostRepository;
 import com.example.hhproject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -40,29 +39,28 @@ public class PostService {
         List<String> followings = followService.getFollowings(userId);
         List<Post> posts = postRepository.findByWriterId(userId);
 
-        for (String followingUserName : followings) {
-            User followingUser = userRepository.findByUsername(followingUserName);
-            List<Post> followingPosts = postRepository.findByWriterId(followingUser.getId());
-            for (Post post : followingPosts) {
-                posts.add(post);
-            }
-        }
-        return sortPostByDesc(posts);
+        List<Post> updatedPosts = addPost(posts, followings);
+        return sortPostByDesc(updatedPosts);
     }
 
     public List<Post> getFollowerPost(final String userId) {
         List<String> followers = followService.getFollowers(userId);
         List<Post> posts = new ArrayList<>();
 
-        for (String followerName : followers) {
-            User follower = userRepository.findByUsername(followerName);
-            List<Post> followerPosts = postRepository.findByWriterId(follower.getId());
-            for (Post post : followerPosts) {
-                posts.add(post);
+        List<Post> updatedPosts = addPost(posts, followers);
+        return sortPostByDesc(updatedPosts);
+    }
+
+    private List<Post> addPost(List<Post> posts, List<String> targets) {
+        List<Post> results = posts;
+        for (String name : targets) {
+            User target = userRepository.findByUsername(name);
+            List<Post> targetPosts = postRepository.findByWriterId(target.getId());
+            for (Post post : targetPosts) {
+                results.add(post);
             }
         }
-
-        return sortPostByDesc(posts);
+        return results;
     }
 
     private List<Post> sortPostByDesc(List<Post> posts) {

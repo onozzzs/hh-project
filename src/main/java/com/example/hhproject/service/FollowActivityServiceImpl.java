@@ -27,7 +27,6 @@ public class FollowActivityServiceImpl implements ActivityService {
         Activity activity = Activity.builder()
                 .user(user)
                 .content(content)
-                .postId(0L)
                 .category(category)
                 .build();
 
