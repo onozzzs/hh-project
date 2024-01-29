@@ -1,14 +1,15 @@
 package com.example.hhproject.controller;
 
-import com.example.hhproject.dto.PasswordDTO;
-import com.example.hhproject.dto.UserDTO;
+import com.example.hhproject.dto.*;
 import com.example.hhproject.model.User;
 import com.example.hhproject.security.TokenProvider;
-import com.example.hhproject.service.MailService;
-import com.example.hhproject.service.S3UploadService;
-import com.example.hhproject.service.UserService;
+import com.example.hhproject.service.*;
+import com.example.hhproject.util.RedisUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 
+@Slf4j
 @RestController
 @RequestMapping
 @RequiredArgsConstructor
@@ -28,10 +30,25 @@ public class UserController {
     private UserService userService;
     @Autowired
     private TokenProvider tokenProvider;
+
+    @Autowired
+    RedisTemplate<String, String> redisTemplate;
+
     private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    @PostMapping("/login")
+    @PostMapping("/auth/logout")
+    public ResponseEntity<?> logout(@AuthenticationPrincipal String userId, @RequestBody TokenRequestDTO tokenRequestDTO) {
+        log.info("logout controller");
+        if (redisTemplate.opsForValue().get("JWT_TOKEN:" + userId) != null) {
+            log.info("delete token");
+            redisTemplate.delete("JWT_TOKEN:" + userId);
+        }
+        return ResponseEntity.ok().body("Logout successful");
+    }
+
+    @PostMapping("/auth/login")
     public ResponseEntity<?> login(@RequestBody UserDTO userDTO) {
+        log.info("login controller");
         User user = userService.getByCredentials(
                 userDTO.getMail(),
                 userDTO.getPassword(),
@@ -40,6 +57,9 @@ public class UserController {
 
         if (user != null) {
             final String token = tokenProvider.create(user);
+
+            redisTemplate.opsForValue().set("JWT_TOKEN:" + user.getId(), token, tokenProvider.getExpiration(token));
+
             UserDTO responseUserDTO = UserDTO.builder()
                     .mail(user.getMail())
                     .password(user.getPassword())
@@ -66,6 +86,7 @@ public class UserController {
                     .build();
 
             User registeredUser = userService.registerUser(user);
+
             UserDTO responseUserDTO = UserDTO.builder()
                     .id(registeredUser.getId())
                     .mail(registeredUser.getMail())

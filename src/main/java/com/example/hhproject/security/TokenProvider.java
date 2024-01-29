@@ -39,4 +39,13 @@ public class TokenProvider {
 
         return claims.getSubject();
     }
+
+    public Long getExpiration(String accessToken) {
+        Date expiration = Jwts.parserBuilder().setSigningKey(SECRET_KEY)
+                .build().parseClaimsJws(accessToken).getBody().getExpiration();
+
+        long now = new Date().getTime();
+
+        return (expiration.getTime() - now);
+    }
 }

@@ -1,8 +1,10 @@
 package com.example.hhproject.service;
 
+import com.example.hhproject.dto.TokenRequestDTO;
 import com.example.hhproject.model.User;
 import com.example.hhproject.repository.UserRepository;
 import com.example.hhproject.security.TokenProvider;
+import com.example.hhproject.util.RedisUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,8 +16,26 @@ import java.util.NoSuchElementException;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private RedisUtil redisUtil;
+    @Autowired
     private TokenProvider tokenProvider;
+
+    public void logout(String accessToken) {
+        if (tokenProvider.validateAndGetUserId(accessToken) != null) {
+            String userId = tokenProvider.validateAndGetUserId(accessToken);
+            log.info("----------------------------------userId" + userId);
+            String refreshTokenKey = "RT:" + userId;
+            if (redisUtil.existData(refreshTokenKey)) {
+                redisUtil.deleteData(refreshTokenKey);
+            }
+
+            Long expiration = tokenProvider.getExpiration(accessToken);
+            log.info("----------------------------------expiration" + expiration);
+
+            redisUtil.setDataExpire(accessToken, "logout", expiration);
+        }
+    }
 
     public User updateUser(final String userId, User user) {
         User originalUser = userRepository.findById(userId).orElseThrow(() -> new NoSuchElementException("user not found"));
