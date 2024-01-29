@@ -40,6 +40,10 @@ public class NotificationService {
         return notificationRepository.findByReceiver(userId);
     }
 
+    public List<Notification> getNotificationToUser(final String userId) {
+        return notificationRepository.findByReceiverAndStatus(userId, true);
+    }
+
     private void updateFollowingsNotification(final String userId) {
         List<String> followings = followService.getFollowings(userId);
         for (String followingUserName : followings) {

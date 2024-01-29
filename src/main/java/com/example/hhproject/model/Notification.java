@@ -3,6 +3,7 @@ package com.example.hhproject.model;
 import com.example.hhproject.dto.NotificationDTO;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalDateTime;
 
@@ -25,5 +26,8 @@ public class Notification {
 
     private LocalDateTime createdAt;
 
+    @ColumnDefault("false")
     private Boolean status;
+    @ColumnDefault("false")
+    private Boolean isRead;
 }

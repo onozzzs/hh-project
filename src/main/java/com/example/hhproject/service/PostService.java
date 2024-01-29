@@ -7,6 +7,8 @@ import com.example.hhproject.repository.PostRepository;
 import com.example.hhproject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -45,7 +47,25 @@ public class PostService {
                 posts.add(post);
             }
         }
+        return sortPostByDesc(posts);
+    }
 
+    public List<Post> getFollowerPost(final String userId) {
+        List<String> followers = followService.getFollowers(userId);
+        List<Post> posts = new ArrayList<>();
+
+        for (String followerName : followers) {
+            User follower = userRepository.findByUsername(followerName);
+            List<Post> followerPosts = postRepository.findByWriterId(follower.getId());
+            for (Post post : followerPosts) {
+                posts.add(post);
+            }
+        }
+
+        return sortPostByDesc(posts);
+    }
+
+    private List<Post> sortPostByDesc(List<Post> posts) {
         List<Post> sortedPosts = posts.stream()
                 .sorted(Comparator.comparing(Post::getCreatedAt).reversed())
                 .collect(Collectors.toList());

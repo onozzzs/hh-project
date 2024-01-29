@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class UserDTO {
     private String token;
-    private String refreshToken;
     private String mail;
     private String username;
     private String password;
@@ -20,12 +19,18 @@ public class UserDTO {
     private String content;
     private boolean status;
 
+    public UserDTO(String id, String mail, String password, boolean status) {
+        this.id = id;
+        this.mail = mail;
+        this.password = password;
+        this.status = status;
+    }
+
     public static User toEntity(final UserDTO dto) {
         return User.builder()
                 .mail(dto.getMail())
                 .username(dto.getUsername())
-                .password(dto.getPassword())
-                .status(dto.isStatus())
+                .content(dto.getContent())
                 .build();
     }
 }

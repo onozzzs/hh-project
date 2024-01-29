@@ -30,6 +30,7 @@ public class NotificationDTO {
                 .activityId(notificationDTO.getActivityId())
                 .content(notificationDTO.getContent())
                 .createdAt(notificationDTO.getCreatedAt())
+                .status(true)
                 .build();
     }
 }

@@ -24,4 +24,11 @@ public class NotificationController {
         List<NotificationResponseDTO> responseDTOs = notifications.stream().map(NotificationResponseDTO::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(responseDTOs);
     }
+
+    @GetMapping("/toUser")
+    public ResponseEntity<?> getNotificationToUser(@AuthenticationPrincipal String userId) {
+        List<Notification> notifications = notificationService.getNotificationToUser(userId);
+        List<NotificationResponseDTO> responseDTOs = notifications.stream().map(NotificationResponseDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(responseDTOs);
+    }
 }

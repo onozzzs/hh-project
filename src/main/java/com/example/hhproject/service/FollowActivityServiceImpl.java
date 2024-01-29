@@ -1,7 +1,5 @@
 package com.example.hhproject.service;
 
-import com.example.hhproject.dto.NotificationDTO;
-import com.example.hhproject.dto.NotificationResponseDTO;
 import com.example.hhproject.model.Activity;
 import com.example.hhproject.model.Category;
 import com.example.hhproject.model.Notification;
@@ -39,7 +37,8 @@ public class FollowActivityServiceImpl implements ActivityService {
                 .receiver(targetUser.getId())
                 .content(content)
                 .activityId(activity.getId())
-                .status(false)
+                .status(true)
+                .isRead(false)
                 .createdAt(activity.getCreatedAt())
                 .build();
         notificationRepository.save(notification);

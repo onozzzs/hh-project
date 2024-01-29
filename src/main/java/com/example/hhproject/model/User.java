@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.UuidGenerator;
 import org.springframework.lang.Nullable;
-
 import java.util.List;
 
 @Builder
@@ -41,4 +40,21 @@ public class User {
     @Nullable
     @OneToMany(mappedBy = "user")
     private List<Activity> activityList;
+
+    public void updateStatus() {
+        this.status = true;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
+    public void updateProfileUrl(String profileUrl) {
+        this.profileUrl = profileUrl;
+    }
+
+    public void updateUsernameAndContent(String username, String content) {
+        this.username = username;
+        this.content = content;
+    }
 }

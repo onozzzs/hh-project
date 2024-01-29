@@ -35,16 +35,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String token = parseBearerToken(request);
             if (token != null && !token.equalsIgnoreCase("null")) {
                 String userId = tokenProvider.validateAndGetUserId(token);
-                log.info("Authenticated userId: " + userId);
                 AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                         userId, null, AuthorityUtils.NO_AUTHORITIES
                 );
 
                 String key = "JWT_TOKEN:" + tokenProvider.validateAndGetUserId(token);
                 String storedToken = (String) redisTemplate.opsForValue().get(key);
-                log.info("storedToken: " + storedToken);
                 if (redisTemplate.hasKey(key) && storedToken != null) {
-                    log.info("filter not null");
                     authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                     SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                     securityContext.setAuthentication(authenticationToken);

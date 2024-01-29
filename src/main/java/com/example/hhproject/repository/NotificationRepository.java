@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
     List<Notification> findByReceiver(String receiver);
-
+    List<Notification> findByReceiverAndStatus(String receiver, Boolean status);
     Optional<Notification> findByReceiverAndActivityId(String receiver, Long activityId);
 }

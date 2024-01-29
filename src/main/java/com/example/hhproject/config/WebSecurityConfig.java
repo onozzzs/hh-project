@@ -27,7 +27,7 @@ public class WebSecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> {
-                            authorize.requestMatchers("/", "/auth/login", "/signup", "/signup/sendMail", "/signup/verifyMail",
+                            authorize.requestMatchers("/", "/auth/login", "/auth/signup", "/mail/*",
                                             "/swagger-ui/**", "/api-docs", "/swagger-ui-custom.html",
                                             "/v3/api-docs/**", "/api-docs/**", "/swagger-ui.html")
                                     .permitAll()

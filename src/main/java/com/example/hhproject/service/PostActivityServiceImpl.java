@@ -1,10 +1,7 @@
 package com.example.hhproject.service;
 
 import com.example.hhproject.dto.NotificationDTO;
-import com.example.hhproject.model.Activity;
-import com.example.hhproject.model.Category;
-import com.example.hhproject.model.Post;
-import com.example.hhproject.model.User;
+import com.example.hhproject.model.*;
 import com.example.hhproject.repository.ActivityRepository;
 import com.example.hhproject.repository.PostRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -40,8 +37,9 @@ public class PostActivityServiceImpl implements ActivityService {
                 .build();
 
         activityRepository.save(activity);
-
-        NotificationDTO notificationDTO = new NotificationDTO(activity);
-        notificationService.updateNotification(post.getWriter().getId(), notificationDTO);
+        if (post.getWriter().getId() != user.getId()) {
+            NotificationDTO notificationDTO = new NotificationDTO(activity);
+            notificationService.updateNotification(post.getWriter().getId(), notificationDTO);
+        }
     }
 }

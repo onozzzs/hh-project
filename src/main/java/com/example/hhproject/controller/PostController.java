@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,6 +30,13 @@ public class PostController {
     @GetMapping
     public ResponseEntity<?> getPost(@AuthenticationPrincipal String userId) {
         List<Post> posts = postService.getPost(userId);
+        List<PostResponseDTO> responseDTOs = posts.stream().map(PostResponseDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok().body(responseDTOs);
+    }
+
+    @GetMapping("/follower")
+    public ResponseEntity<?> getFollowerPost(@AuthenticationPrincipal String userId) {
+        List<Post> posts = postService.getFollowerPost(userId);
         List<PostResponseDTO> responseDTOs = posts.stream().map(PostResponseDTO::new).collect(Collectors.toList());
         return ResponseEntity.ok().body(responseDTOs);
     }
