@@ -3,16 +3,14 @@ package com.example.hhproject.model;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.ColumnDefault;
 
-@Builder
-@Data
-@Entity
-@NoArgsConstructor
 @AllArgsConstructor
-public class Comment extends BaseTimeEntity {
+@NoArgsConstructor
+@Builder
+@Entity
+@Table(name = "likes")
+public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,12 +23,7 @@ public class Comment extends BaseTimeEntity {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    private String content;
-
-    @ColumnDefault("0")
-    private int likeCount;
-
-    public void updateLikeCount(int likeCount) {
-        this.likeCount = likeCount;
-    }
+    @ManyToOne
+    @JoinColumn(name = "comment_id")
+    private Comment comment;
 }

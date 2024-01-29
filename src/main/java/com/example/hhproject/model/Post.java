@@ -26,5 +26,9 @@ public class Post extends BaseTimeEntity{
     private String content;
 
     @ColumnDefault("0")
-    private int like_count;
+    private int likeCount;
+
+    public void updateLikeCount(int likeCount) {
+        this.likeCount = likeCount;
+    }
 }
