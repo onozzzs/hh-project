@@ -23,6 +23,7 @@ public class NotificationDTO {
         this.activityId = activity.getId();
         this.content = activity.getContent();
         this.createdAt = activity.getCreatedAt();
+        this.status = false;
     }
 
     public static Notification toEntity(NotificationDTO notificationDTO) {

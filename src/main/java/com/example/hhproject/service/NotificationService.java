@@ -28,20 +28,20 @@ public class NotificationService {
     @Autowired
     private FollowService followService;
 
-    public void updateNotification(final String userId, NotificationDTO notificationDTO) {
-        Notification notification = NotificationDTO.toEntity(notificationDTO);
-        notification.setReceiver(userId);
-
-        notificationRepository.save(notification);
-    }
-
     public List<Notification> getNotification(final String userId) {
         updateFollowingsNotification(userId);
-        return notificationRepository.findByReceiver(userId);
+        return notificationRepository.findByReceiverAndStatus(userId, false);
     }
 
     public List<Notification> getNotificationToUser(final String userId) {
         return notificationRepository.findByReceiverAndStatus(userId, true);
+    }
+
+    public void updateNotification(final String userId, NotificationDTO notificationDTO) {
+        Notification notification = NotificationDTO.toEntity(notificationDTO);
+        notification.setReceiver(userId);
+        notification.setStatus(true);
+        notificationRepository.save(notification);
     }
 
     private void updateFollowingsNotification(final String userId) {
